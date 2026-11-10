@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6f2">
+  <meta name="description" content="拖动数轴，观察取相反数时左右顺序与不等号的变化。完全本地、离线可用的数学互动演示。">
+  <title>数轴实验室 · 负号与不等号</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="numberline.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="数轴实验室首页"><span class="brand-mark" aria-hidden="true">↔</span><strong>数轴实验室</strong><span class="brand-divider"></span><span class="course">一元一次不等式</span></a>
+    <div class="top-actions"><span class="local-badge"><i></i> 本地互动</span><button id="reset" class="icon-button" title="重置" aria-label="重置">↺</button><button id="fullscreen" class="icon-button" title="全屏演示" aria-label="全屏演示">⛶</button></div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow"><span>01</span> 看见不等号的变化</p><h1>负号，让顺序<span class="title-accent">翻过来。</span></h1></div>
+      <p class="intro-hint">拖动两点，再点「两边乘 −1」<span aria-hidden="true">↙</span></p>
+    </section>
+
+    <section class="lab" aria-label="不等式数轴实验">
+      <div class="formula-row">
+        <div class="formula-block"><span class="small-label">原来的关系</span><div class="formula" aria-label="原来的不等式"><span class="math x-color">x</span><span id="before-sign" class="relation">&lt;</span><span class="math a-color">a</span></div><div id="before-numbers" class="numeric">2 &lt; 5</div></div>
+        <div class="operation"><span>两边同乘</span><strong>−1</strong><span class="operation-arrow" aria-hidden="true">⟶</span></div>
+        <div class="formula-block result" id="result-block"><span class="small-label">取相反数后</span><div class="formula" aria-label="取相反数后的不等式"><span class="math x-color"><b class="negative">−</b>x</span><span id="after-sign" class="relation result-sign">&gt;</span><span class="math a-color"><b class="negative">−</b>a</span></div><div id="after-numbers" class="numeric">−2 &gt; −5</div></div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-top"><span><i class="legend-dot x-bg"></i> x <span class="legend-separator">/</span><i class="legend-dot a-bg"></i> a</span><span id="stage-label">拖动圆点，改变数值</span></div>
+        <svg id="numberline" viewBox="0 0 1120 360" aria-label="可拖动的数轴，x 等于 2，a 等于 5" role="group">
+          <defs>
+            <pattern id="dot-grid" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="12" cy="12" r="0.8" fill="#dfe3dd"/></pattern>
+            <marker id="axis-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#657067" stroke-width="1.7"/></marker>
+          </defs>
+          <rect width="1120" height="360" fill="url(#dot-grid)"/>
+          <rect id="mirror-band" x="545" width="30" height="360" fill="#e8ecd9" opacity="0.65"/>
+          <line class="origin-guide" x1="560" y1="35" x2="560" y2="304"/>
+          <text class="origin-caption" x="560" y="29" text-anchor="middle">对称中心</text>
+          <g id="trails" aria-hidden="true"><path id="trail-x" class="trail x-stroke"/><path id="trail-a" class="trail a-stroke"/></g>
+          <g id="ticks" aria-hidden="true"></g>
+          <line class="axis" x1="45" x2="1082" y1="220" y2="220" marker-end="url(#axis-arrow)"/>
+          <text class="axis-direction" x="1077" y="260" text-anchor="end">数越来越大 →</text>
+          <g id="ghost-x" class="ghost x-color" aria-hidden="true"><circle r="8"/><text text-anchor="middle" y="60"></text></g>
+          <g id="ghost-a" class="ghost a-color" aria-hidden="true"><circle r="8"/><text text-anchor="middle" y="84"></text></g>
+          <g id="point-x" class="point x-color" role="slider" tabindex="0" aria-label="x 的值" aria-valuemin="-8" aria-valuemax="8" aria-valuenow="2"><circle class="hit-area" r="25"/><circle class="point-halo" r="22"/><circle class="point-dot" r="11"/><g class="point-label"><rect x="-47" y="-66" width="94" height="37" rx="12"/><text text-anchor="middle" y="-41">x = 2</text></g></g>
+          <g id="point-a" class="point a-color" role="slider" tabindex="0" aria-label="a 的值" aria-valuemin="-8" aria-valuemax="8" aria-valuenow="5"><circle class="hit-area" r="25"/><circle class="point-halo" r="22"/><circle class="point-dot" r="11"/><g class="point-label"><rect x="-47" y="-66" width="94" height="37" rx="12"/><text text-anchor="middle" y="-41">a = 5</text></g></g>
+        </svg>
+        <p id="observation" class="observation" aria-live="polite"><span class="observation-dot"></span><span id="observation-text">在数轴上，越靠右，数越大。</span></p>
+      </div>
+
+      <div class="playbar">
+        <button id="play" class="play-button"><span id="play-icon" aria-hidden="true">▶</span><span id="play-text">两边乘 −1</span></button>
+        <div class="timeline"><label for="progress"><span>原位置</span><span id="progress-label">翻转进度</span><span>相反数</span></label><input id="progress" type="range" min="0" max="1000" value="0" aria-label="翻转进度"></div>
+        <button id="speed" class="speed-button" title="切换动画速度">慢速 <span>1×</span></button>
+      </div>
+    </section>
+
+    <section class="settings" aria-label="数值与例子">
+      <div class="value-controls"><label class="value-control x-color"><span class="math">x</span><input id="value-x" type="number" min="-8" max="8" step="0.5" value="2" aria-label="输入 x 的值"></label><button class="swap-button" id="swap" title="交换两数" aria-label="交换 x 与 a">⇄</button><label class="value-control a-color"><span class="math">a</span><input id="value-a" type="number" min="-8" max="8" step="0.5" value="5" aria-label="输入 a 的值"></label><label class="inclusive-label"><input id="inclusive" type="checkbox"><span>含等号 <b>≤ ≥</b></span></label></div>
+      <div class="presets" aria-label="切换例子"><button data-preset="positive" class="selected">两个正数</button><button data-preset="mixed">一负一正</button><button data-preset="negative">两个负数</button><button data-preset="equal">两数相等</button></div>
+    </section>
+    <footer><p><span class="footer-symbol">↔</span> 关于原点对称 <span class="footer-arrow">→</span> 左右顺序反转 <span class="footer-arrow">→</span> <strong>不等号方向改变</strong></p><a href="SOURCES.md" target="_blank">开源来源 ↗</a></footer>
+  </main>
+</body>
+</html>
